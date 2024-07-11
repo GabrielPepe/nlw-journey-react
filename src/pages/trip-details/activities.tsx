@@ -1,18 +1,21 @@
-import { useEffect, SetStateAction, Dispatch } from "react"
+import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { api } from "../../lib/axios"
 import { format } from "date-fns"
 import {ptBR} from 'date-fns/locale'
 
-interface ActivitiesProps {
-    activities: Activity[]
-    setActivities: Dispatch<SetStateAction<Activity[]>>
+interface Activity {
+    date: string
+    activities: {
+        id: string
+        title: string
+        occurs_at: string
+    }[]
 }
 
-export default function Activities({activities, setActivities}: ActivitiesProps) {
+export default function Activities() {
     const { tripId } = useParams()
-    console.log(activities);
-    
+    const [activities, setActivities] = useState<Activity[]>([])
 
     useEffect(() => {
         api.get(`/trips/${tripId}/activities`).then(response => setActivities(response.data.activities))

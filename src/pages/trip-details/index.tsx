@@ -1,18 +1,13 @@
 import { Plus } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { CreateActivityModal } from "./create-activity-modal";
 import ImportantLinks from "./important-links";
 import Guests from "./guests";
 import Activities from "./activities";
 import { DestinationAndDateHeader } from "./destination-and-date-header";
 import { Button } from "../../components/button";
-import { useParams } from "react-router-dom";
-import { api } from "../../lib/axios";
 
 export function TripDetailsPage() {
-    const { tripId } = useParams()
-    
-    const [activities, setActivities] = useState<Activity[]>([])
     const [isCreateActivityModalOpen, setIsCreateActivityModalOpen] = useState(false)
 
     function openCreateActivityModal() {
@@ -20,21 +15,6 @@ export function TripDetailsPage() {
     }
     function closeCreateActivityModal() {
         setIsCreateActivityModalOpen(false)
-    }
-
-    async function createActivity(event: FormEvent<HTMLFormElement>) {
-        event.preventDefault()
-
-        const data = new FormData(event.currentTarget)
-        const title = data.get('title')?.toString()
-        const occurs_at = data.get('occurs_at')?.toString()
-        
-        await api.post(`/trips/${tripId}/activities`, {
-            title,
-            occurs_at
-        })
-        
-        closeCreateActivityModal()
     }
 
     return (
@@ -50,7 +30,7 @@ export function TripDetailsPage() {
                             Cadastrar atividade
                         </Button>
                     </div>
-                    <Activities activities={activities} setActivities={setActivities}/>
+                    <Activities />
                 </div>
 
                 <div className="w-80 space-y-6">
@@ -61,7 +41,7 @@ export function TripDetailsPage() {
             </main>
 
             {isCreateActivityModalOpen && (
-                <CreateActivityModal closeCreateActivityModal={closeCreateActivityModal} createActivity={createActivity}/>
+                <CreateActivityModal closeCreateActivityModal={closeCreateActivityModal}/>
             )}
         </div>
     )
