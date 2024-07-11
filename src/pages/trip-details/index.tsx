@@ -6,15 +6,24 @@ import Guests from "./guests";
 import Activities from "./activities";
 import { DestinationAndDateHeader } from "./destination-and-date-header";
 import { Button } from "../../components/button";
+import { CreateNewLinkModal } from "./create-link-modal";
 
 export function TripDetailsPage() {
     const [isCreateActivityModalOpen, setIsCreateActivityModalOpen] = useState(false)
+    const [ isCreateNewLinkModalOpen, setIsCreateNewLinkModalOpen] = useState(false)
 
     function openCreateActivityModal() {
         setIsCreateActivityModalOpen(true)
     }
     function closeCreateActivityModal() {
         setIsCreateActivityModalOpen(false)
+    }
+
+    function openCreateNewLinkModal(){
+        setIsCreateNewLinkModalOpen(true)
+    }
+    function closeCreateNewLinkModal(){
+        setIsCreateNewLinkModalOpen(false)
     }
 
     return (
@@ -34,7 +43,7 @@ export function TripDetailsPage() {
                 </div>
 
                 <div className="w-80 space-y-6">
-                    <ImportantLinks />
+                    <ImportantLinks openCreateNewLinkModal={openCreateNewLinkModal}/>
                     <div className="w-full h-px bg-zinc-800" />
                     <Guests />
                 </div>
@@ -42,6 +51,9 @@ export function TripDetailsPage() {
 
             {isCreateActivityModalOpen && (
                 <CreateActivityModal closeCreateActivityModal={closeCreateActivityModal}/>
+            )}
+            {isCreateNewLinkModalOpen && (
+                <CreateNewLinkModal closeCreateNewLinkModal={closeCreateNewLinkModal}/>
             )}
         </div>
     )
