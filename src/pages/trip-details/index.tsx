@@ -1,19 +1,16 @@
 import { Plus } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { CreateActivityModal } from "./create-activity-modal";
 import ImportantLinks from "./important-links";
 import Guests from "./guests";
 import Activities from "./activities";
 import { DestinationAndDateHeader } from "./destination-and-date-header";
 import { Button } from "../../components/button";
-import { useParams } from "react-router-dom";
-import { api } from "../../lib/axios";
+import { CreateNewLinkModal } from "./create-link-modal";
 
 export function TripDetailsPage() {
-    const { tripId } = useParams()
-    
-    const [activities, setActivities] = useState<Activity[]>([])
     const [isCreateActivityModalOpen, setIsCreateActivityModalOpen] = useState(false)
+    const [ isCreateNewLinkModalOpen, setIsCreateNewLinkModalOpen] = useState(false)
 
     function openCreateActivityModal() {
         setIsCreateActivityModalOpen(true)
@@ -22,19 +19,11 @@ export function TripDetailsPage() {
         setIsCreateActivityModalOpen(false)
     }
 
-    async function createActivity(event: FormEvent<HTMLFormElement>) {
-        event.preventDefault()
-
-        const data = new FormData(event.currentTarget)
-        const title = data.get('title')?.toString()
-        const occurs_at = data.get('occurs_at')?.toString()
-        
-        await api.post(`/trips/${tripId}/activities`, {
-            title,
-            occurs_at
-        })
-        
-        closeCreateActivityModal()
+    function openCreateNewLinkModal(){
+        setIsCreateNewLinkModalOpen(true)
+    }
+    function closeCreateNewLinkModal(){
+        setIsCreateNewLinkModalOpen(false)
     }
 
     return (
@@ -50,18 +39,21 @@ export function TripDetailsPage() {
                             Cadastrar atividade
                         </Button>
                     </div>
-                    <Activities activities={activities} setActivities={setActivities}/>
+                    <Activities />
                 </div>
 
                 <div className="w-80 space-y-6">
-                    <ImportantLinks />
+                    <ImportantLinks openCreateNewLinkModal={openCreateNewLinkModal}/>
                     <div className="w-full h-px bg-zinc-800" />
                     <Guests />
                 </div>
             </main>
 
             {isCreateActivityModalOpen && (
-                <CreateActivityModal closeCreateActivityModal={closeCreateActivityModal} createActivity={createActivity}/>
+                <CreateActivityModal closeCreateActivityModal={closeCreateActivityModal}/>
+            )}
+            {isCreateNewLinkModalOpen && (
+                <CreateNewLinkModal closeCreateNewLinkModal={closeCreateNewLinkModal}/>
             )}
         </div>
     )
